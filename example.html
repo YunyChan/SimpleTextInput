@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SimpleTextInput Example</title>
+    <style>
+
+    </style>
+</head>
+<body>
+<div id="text"></div>
+<script src="src/SimpleTextInput.js"></script>
+<script>
+    var oText = new SimpleTextInput({
+        target: document.getElementById('text'),
+        value: '',
+        title: 'UserName',
+        placeholder: 'Your name!'
+    });
+</script>
+</body>
+</html>
