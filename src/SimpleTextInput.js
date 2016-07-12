@@ -4,9 +4,7 @@
 (function(oWin, oDoc){
     // Helper
     var Helper = {
-        listenEvent: fListenEvent,
-        stopPropagation: fStopPropagation,
-        preventDefault: fPreventDefault
+        listenEvent: fListenEvent
     };
 
     function fListenEvent(oDom, sEventName, fCallback, bUseCapture){
@@ -20,36 +18,26 @@
         }
     }
 
-    function fStopPropagation(oEvent) {
-        try{
-            oEvent.stopPropagation();
-        }catch(e){
-            oEvent.cancelBubble = true;
-        }
-    }
-
-    function fPreventDefault(oEvent) {
-        try {
-            oEvent.preventDefault();
-        }catch(e){
-            oEvent.returnValue = false;
-        }
-    }
-
-
     var SimpleTextInput = fConstructor;
     // 静态变量
     //SimpleTextInput.prototype.xxx = '';
     // 静态方法
     SimpleTextInput.prototype.init = fInit;
     SimpleTextInput.prototype.initEvents = fInitEvents;
+    SimpleTextInput.prototype.onFocus = fOnFocus;
+    SimpleTextInput.prototype.onBlur = fOnBlur;
     SimpleTextInput.prototype.render = fRender;
+    SimpleTextInput.prototype.getValue = fGetValue;
+    SimpleTextInput.prototype.setValue = fSetValue;
+    SimpleTextInput.prototype.showPlaceholder = fShowPlaceholder;
+    SimpleTextInput.prototype.hidePlaceholder = fHidePlaceholder;
 
     function fConstructor(oConf){
         this.config =  oConf = oConf || {};
         this.target = oConf.target;
         this.title = oConf.title || '';
         this.placeholder = oConf.placeholder || '';
+        this.value = oConf.value || '';
         this.init();
         return this;
     }
@@ -57,10 +45,39 @@
     function fInit(){
         this.render();
         this.initEvents();
+        this.setValue(this.value);
     }
 
     function fInitEvents() {
         var that = this;
+        if(this.placeholder){
+            Helper.listenEvent(this.input, 'focus', function () {
+                that.onFocus();
+            });
+            Helper.listenEvent(this.input, 'blur', function () {
+                that.onBlur();
+            });
+        }
+        Helper.listenEvent(this.target, 'click', function (oEvent) {
+            var oClickDom = oEvent.target || oEvent.srcElement;
+            var sClassName = oClickDom.className;
+            if(/simple-text-input-tip/.test(sClassName)){
+                that.input.focus();
+            }
+            if(/simple-text-input-title/.test(sClassName)){
+                that.input.focus();
+            }
+        });
+    }
+
+    function fOnFocus() {
+        this.hidePlaceholder();
+    }
+
+    function fOnBlur() {
+        if(this.input.value == ''){
+            this.showPlaceholder();
+        }
     }
 
     function fRender() {
@@ -70,26 +87,52 @@
         this.input = oDoc.createElement('input');
         this.input.type = 'text';
         this.input.className = 'simple-text-input-input';
-
-        if(this.title){
-            this.header = oDoc.createElement('span');
-            this.header.className = 'simple-text-input-title';
-            this.header.innerHTML = this.title;
-            this.label.appendChild(this.header);
-        }
-
         this.label.appendChild(this.input);
+        this.target.appendChild(this.label);
 
         if(this.placeholder){
             this.tip = oDoc.createElement('span');
             this.tip.className = 'simple-text-input-tip';
             this.tip.innerHTML = this.placeholder;
+            this.tip.style.lineHeight = this.input.clientHeight + 'px';
             this.label.appendChild(this.tip);
+        }
+
+        if(this.title){
+            this.header = oDoc.createElement('span');
+            this.header.className = 'simple-text-input-title';
+            this.header.innerHTML = this.title;
+            this.target.appendChild(this.header);
         }
 
         this.rawClass = this.target.className;
         this.rootClass = (this.rawClass == ''? '' : ' ') + 'simple-text-input';
-        this.target.appendChild(this.label);
+        this.target.className = this.rootClass;
+    }
+
+    function fGetValue() {
+        this.value = this.input.value;
+        return this.value;
+    }
+
+    function fSetValue(sRawValue) {
+        this.value = sRawValue + '';
+        this.input.value = this.value;
+        if(this.placeholder){
+            if(this.value == ''){
+                this.showPlaceholder();
+            }else{
+                this.hidePlaceholder();
+            }
+        }
+    }
+
+    function fShowPlaceholder() {
+        this.tip.style.display = '';
+    }
+
+    function fHidePlaceholder() {
+        this.tip.style.display = 'none';
     }
 
     if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
