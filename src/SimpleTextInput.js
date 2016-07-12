@@ -22,22 +22,31 @@
     function fGetDOM(oRoot, sQuery) {
         var sMatch = sQuery.match(/([\w\-]*)([\.#])([\w\-]*)/);
         var sTag = '';
-        var sAttribute = '';
-        var sClass = '';
+        var sAttributeValue = '';
+        var fIsMatch = null;
         if(sMatch.length > 1){
             sTag = sMatch[1];
-            sAttribute = sMatch[2] == '#' ? 'id' : 'class';
-            sClass = sMatch[3];
-            var oTargetClassRegExp = new RegExp(sClass);
+            fIsMatch = sMatch[2] == '#' ? _fIsMatchById : _fIsMatchByClass;
+            sAttributeValue = sMatch[3];
             var oDOMs = oRoot.getElementsByTagName(sTag);
             for(var cnt = 0, length = oDOMs.length; cnt < length; cnt ++){
                 var oDOM = oDOMs[cnt];
-                if(oTargetClassRegExp.test(oDOM.getAttribute(sAttribute))){
+                if(fIsMatch(oDOM, sAttributeValue)){
                     return oDOM;
                 }
             }
         }
         return null;
+
+        function _fIsMatchById(oDOM, sTargetId){
+            return oDOM.id == sTargetId;
+        }
+
+        function _fIsMatchByClass(oDOM, sTargetClass){
+            var oTargetClassRegExp = new RegExp(sTargetClass);
+            return oTargetClassRegExp.test(oDOM.className);
+        }
+
     }
     
     var SimpleTextInput = fConstructor;
@@ -86,7 +95,7 @@
         Helper.listenEvent(this.target, 'click', function (oEvent) {
             var oClickDom = oEvent.target || oEvent.srcElement;
             var sClassName = oClickDom.className;
-            if(/simple-text-input-tip/.test(sClassName)){
+            if(/simple-text-input-placeholder/.test(sClassName)){
                 that.input.focus();
             }
             if(/simple-text-input-title/.test(sClassName)){
