@@ -116,11 +116,13 @@
 
     function fRender() {
         this.renderDOM();
-        if(this.placeholder){
-            this.tip.style.lineHeight = this.input.clientHeight + 'px';
+
+        if(this.bind){
+            this.rootClass = this.target.className;
+        }else{
+            this.rawClass = this.target.className;
+            this.rootClass = this.rawClass + (this.rawClass == ''? '' : ' ') + 'simple-text-input';
         }
-        this.rawClass = this.target.className;
-        this.rootClass = (this.rawClass == ''? '' : ' ') + 'simple-text-input';
         this.target.className = this.rootClass;
     }
 
