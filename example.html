@@ -7,7 +7,7 @@
         .simple-text-input-label{
             position: relative;
         }
-        .simple-text-input-tip{
+        .simple-text-input-placeholder{
             position: absolute;
             top: 0;
             left: 0;
@@ -15,14 +15,28 @@
     </style>
 </head>
 <body>
-<div id="text"></div>
+
+<div id="textCreate"></div>
+
+<div id="textBind">
+    <span class="simple-text-input-title">UserName</span>
+    <label class="simple-text-input-label">
+        <input class="simple-text-input-input" type="text" value="">
+        <span class="simple-text-input-placeholder">Your name!</span>
+    </label>
+</div>
 <script src="src/SimpleTextInput.js"></script>
 <script>
-    var oText = new SimpleTextInput({
-        target: document.getElementById('text'),
+    var oTextCreate = new SimpleTextInput({
+        target: document.getElementById('textCreate'),
         value: '',
         title: 'UserName',
         placeholder: 'Your name!'
+    });
+
+    var oTextBind = new SimpleTextInput({
+        target: document.getElementById('textBind'),
+        bind: true
     });
 </script>
 </body>

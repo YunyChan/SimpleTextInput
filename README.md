@@ -33,14 +33,15 @@
 下面是组件的配置参数说明：
 
 + `target` - __必须__, 需要插入组件的dom元素
-+ `value` - _default: '', 组件初始化时输入框默认值，默认空字符串
++ `bind` - _default: false_, 是否从已有DOM渲染组件
++ `value` - _default: ''_, 组件初始化时输入框默认值，默认空字符串
 + `title` - _default: ''_, 组件标题，默认为空字符串
 + `placeholder` - _default: ''_, 组件输入框默认提示信息，默认为空字符串
 
 APIs
 
 * `getValue()` - 获取组件输入框值
-* `setValue()` - 设置组件输入框值
+* `setValue(String)` - 设置组件输入框值
 
 ## 作者 ##
 
