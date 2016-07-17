@@ -130,11 +130,11 @@
         if(this.bind){
             this.label = Helper.getDOM(this.target, 'label.simple-text-input-label');
             this.input = Helper.getDOM(this.target, 'input.simple-text-input-input');
-            this.value = this.input.value;
+            this.value = this.value || this.input.value;
             this.tip = Helper.getDOM(this.target, 'span.simple-text-input-placeholder');
-            this.placeholder = this.tip ? this.tip.innerHTML : '';
+            this.placeholder = this.placeholder || this.tip ? this.tip.innerHTML : '';
             this.header = Helper.getDOM(this.target, 'span.simple-text-input-title');
-            this.title = this.header ? this.header.innerHTML : '';
+            this.title = this.title || this.header ? this.header.innerHTML : '';
         }else{
             this.label = oDoc.createElement('label');
             this.label.className = 'simple-text-input-label';
